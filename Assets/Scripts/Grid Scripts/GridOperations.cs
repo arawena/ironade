@@ -47,7 +47,7 @@ public class GridOperations : MonoBehaviour {
 		coordinates[Coordinate.Top] = mRenderer.transform.position.y + mapHeight / 2;
 		coordinates[Coordinate.Left] = mRenderer.transform.position.x - mapWidth / 2;
 		coordinates[Coordinate.Bottom] = mRenderer.transform.position.y - mapHeight / 2;
-		coordinates[Coordinate.Right] = mRenderer.transform.position.x - mapWidth / 2;
+		coordinates[Coordinate.Right] = mRenderer.transform.position.x + mapWidth / 2;
 	}
 
 }
