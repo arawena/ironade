@@ -5,8 +5,8 @@ enum Direction{Up, Down, Left, Right};
 
 public class FarmerControllerScript : MonoBehaviour {
 
-	Animator motionAnimator;
-	bool isFlipped = false;
+	private Animator motionAnimator;
+	private bool isFlipped = false;
 
 	void Start () {
 		motionAnimator = GetComponent<Animator> ();
