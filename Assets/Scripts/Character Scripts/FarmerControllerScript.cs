@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum Direction{Up, Down, Left, Right};
+enum Direction{None, Up, Down, Left, Right};
 
 public class FarmerControllerScript : MonoBehaviour {
 
@@ -17,7 +17,7 @@ public class FarmerControllerScript : MonoBehaviour {
 		Direction mDirection = (Direction)motionAnimator.GetInteger ("direction");
 
 		// XOR between the direction being right and the flipped property in order to apply/revert the rotation
-		if (mDirection == Direction.Right != isFlipped) {
+		if ((mDirection == Direction.Right) != isFlipped) {
 			Flip ();
 			isFlipped = (mDirection==Direction.Right);
 		}

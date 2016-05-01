@@ -18,10 +18,7 @@ public class GridOperations : MonoBehaviour {
 	public float cellHeight{ get; private set;}
 	public float cellWidth{ get;private set;}
 
-	public float topCoordinate{ get; private set;}
-	public float leftCoordinate{ get; private set;}
-
-
+	public float[] coordinates{ get; private set;}
 
 	public static GridOperations sharedInstance {
 		get {
@@ -40,14 +37,17 @@ public class GridOperations : MonoBehaviour {
 	}
 
 	public void ChangeGridDimensions () {
-		this.mapWidth = mRenderer.bounds.size.x;
-		this.mapHeight = mRenderer.bounds.size.y;
+		mapWidth = mRenderer.bounds.size.x;
+		mapHeight = mRenderer.bounds.size.y;
 
-		this.cellHeight = (int)mapWidth / grid.GetLength (0);
-		this.cellWidth = (int)mapHeight / grid.GetLength (1);
+		cellHeight = mapWidth / grid.GetLength (0);
+		cellWidth = mapHeight / grid.GetLength (1);
 
-		this.topCoordinate = mRenderer.transform.position.y + mapHeight / 2;
-		this.leftCoordinate = mRenderer.transform.position.x - mapWidth / 2;
+		coordinates = new float[4];
+		coordinates[Coordinate.Top] = mRenderer.transform.position.y + mapHeight / 2;
+		coordinates[Coordinate.Left] = mRenderer.transform.position.x - mapWidth / 2;
+		coordinates[Coordinate.Bottom] = mRenderer.transform.position.y - mapHeight / 2;
+		coordinates[Coordinate.Right] = mRenderer.transform.position.x - mapWidth / 2;
 	}
 
 }
