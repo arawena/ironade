@@ -6,7 +6,8 @@ public class BuildingScript : MonoBehaviour {
 	public int baseCellsWidth;
 	public int baseCellsHeight;
 
-	public float noOfCellsHigh;
+	[SerializeField]
+	private float noOfCellsHigh = 0.25f;
 
 	public float movementSpeed;
 
@@ -22,22 +23,27 @@ public class BuildingScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!isStatic) {
-			Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-
-			float cursorColumn = Mathf.Abs(mousePosition.x - GridOperations.sharedInstance.coordinates [Coordinate.Left]) / GridOperations.sharedInstance.cellWidth; 
-			float cursorRow = Mathf.Abs (mousePosition.y - GridOperations.sharedInstance.coordinates [Coordinate.Bottom]) / GridOperations.sharedInstance.cellHeight;
-
-			float pDisplacedX = cursorColumn - Mathf.Floor (cursorColumn);
-			float pDisplacedY = cursorRow - Mathf.Floor (cursorRow);
-
-			float centerX = mousePosition.x - pDisplacedX * GridOperations.sharedInstance.cellWidth + GridOperations.sharedInstance.cellWidth * (float)baseCellsWidth / 2.0f;
-			float centerY = mousePosition.y - pDisplacedY * GridOperations.sharedInstance.cellHeight + GridOperations.sharedInstance.cellHeight * (float)baseCellsHeight / 2.0f;
-			transform.position = new Vector2 (centerX, centerY);
-			//transform.position = Vector2.Lerp(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), movementSpeed);
+			followCursor ();
 			if (Input.GetMouseButtonDown (0)) {
 				isStatic = true;
 			}
 		}
+	}
+
+	private void followCursor() {
+		Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+
+		float cursorColumn = Mathf.Abs(mousePosition.x - GridOperations.sharedInstance.coordinates [Coordinate.Left]) / GridOperations.sharedInstance.cellWidth; 
+		float cursorRow = Mathf.Abs (mousePosition.y - GridOperations.sharedInstance.coordinates [Coordinate.Bottom]) / GridOperations.sharedInstance.cellHeight;
+
+		float pDisplacedX = cursorColumn - Mathf.Floor (cursorColumn);
+		float pDisplacedY = cursorRow - Mathf.Floor (cursorRow);
+
+		float centerX = mousePosition.x + GridOperations.sharedInstance.cellWidth * ((float)baseCellsWidth / 2.0f - pDisplacedX);
+		float centerY = mousePosition.y + GridOperations.sharedInstance.cellHeight * ((float)baseCellsHeight / 2.0f - pDisplacedY + noOfCellsHigh/2.0f);
+
+		float scaledHeight = (centerY - GridOperations.sharedInstance.coordinates [Coordinate.Top]) / GridOperations.sharedInstance.mapHeight;
+		transform.position = new Vector3 (centerX, centerY, scaledHeight);
 	}
 
 	private void rescaleSprite() {
@@ -51,5 +57,4 @@ public class BuildingScript : MonoBehaviour {
 
 		transform.localScale = new Vector3 (scaleH, scaleV, 1.0f);
 	}
-
 }
