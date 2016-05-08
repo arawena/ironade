@@ -50,4 +50,22 @@ public class GridOperations : MonoBehaviour {
 		coordinates[Coordinate.Right] = mRenderer.transform.position.x + mapWidth / 2;
 	}
 
+	public void WriteBuildingToGrid(int topCellIndexX, int topCellIndexY, int width, int height) {
+		for (int i = topCellIndexX; i < topCellIndexX + width; i++) {
+			for (int j = topCellIndexY; j < topCellIndexY + height; j++) {
+				grid [i, j] = 1;
+			}
+		}
+	}
+
+	public bool CheckFreeSpace(int topCellIndexX, int topCellIndexY, int width, int height) {
+		for (int i = topCellIndexX; i < topCellIndexX + width; i++) {
+			for (int j = topCellIndexY; j < topCellIndexY + height; j++) {
+				if (grid [i, j] != 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
