@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum TileType
 {
     Clear = 0,
-    Path = 1
+    Path = 1,
+    Building = 2,
+    Treasure = 3
 };
 
 public class GridOperations : MonoBehaviour {
@@ -57,16 +60,16 @@ public class GridOperations : MonoBehaviour {
 	}
 
 	public void WriteBuildingToGrid(int topCellIndexX, int topCellIndexY, int width, int height) {
-		for (int i = topCellIndexX; i < topCellIndexX + width; i++) {
-			for (int j = topCellIndexY; j < topCellIndexY + height; j++) {
-				grid [i, j] = 1;
+        for (int i = topCellIndexY; i < topCellIndexY + height; i++) {
+            for (int j = topCellIndexX; j < topCellIndexX + width; j++) {
+                grid [i, j] = (int)TileType.Building;
 			}
 		}
 	}
 
 	public bool CheckFreeSpace(int topCellIndexX, int topCellIndexY, int width, int height) {
-		for (int i = topCellIndexX; i < topCellIndexX + width; i++) {
-			for (int j = topCellIndexY; j < topCellIndexY + height; j++) {
+		for (int i = topCellIndexY; i < topCellIndexY + height; i++) {
+			for (int j = topCellIndexX; j < topCellIndexX + width; j++) {
 				if (grid [i, j] != 0) {
 					return false;
 				}
@@ -74,4 +77,36 @@ public class GridOperations : MonoBehaviour {
 		}
 		return true;
 	}
+
+    public List<Vector2> GetSpawnLocations()
+    {
+        int firstRow = 0;
+        int lastRow = grid.GetLength(1)-1;
+        List<Vector2> spawnLocations = new List<Vector2>(); 
+
+        for(int j=0; j<grid.GetLength(0); j++)
+        {
+            if(grid[firstRow, j] == (int)TileType.Path) {
+                spawnLocations.Add(new Vector2(firstRow,j));
+            }
+            if (grid[lastRow, j] == (int)TileType.Path)
+            {
+                spawnLocations.Add(new Vector2(lastRow, j));
+            }
+        }
+        int lastColumn = grid.GetLength(0)-1;
+        for (int j = 1; j < grid.GetLength(1)-1; j++)
+        {
+            if (grid[j,firstRow] == (int)TileType.Path)
+            {
+                spawnLocations.Add(new Vector2(j, firstRow));
+            }
+            if (grid[j, lastColumn] == (int)TileType.Path)
+            {
+                spawnLocations.Add(new Vector2(j, lastColumn));
+            }
+        }
+
+        return spawnLocations;
+    }
 }
