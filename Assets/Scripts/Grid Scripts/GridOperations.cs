@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum TileType
+{
+    Clear = 0,
+    Path = 1
+};
+
 public class GridOperations : MonoBehaviour {
 
 	[SerializeField]
 	private string fileName = "gridSettings";
 
-	private Renderer mRenderer;
+    private Renderer mRenderer;
 
 	private static GridOperations _sharedInstance;
 
-	private int[,] grid;
+	public int[,] grid;
 
 	public float mapWidth { get; private set;}
 	public float mapHeight{ get; private set;}
@@ -32,7 +38,7 @@ public class GridOperations : MonoBehaviour {
 
 	public void Init () {
 		grid = FileOperations.ReadFile (fileName);
-		mRenderer = GetComponent<Renderer> ();
+        mRenderer = GetComponent<Renderer> ();
 		this.ChangeGridDimensions ();
 	}
 

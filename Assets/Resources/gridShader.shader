@@ -6,6 +6,7 @@
         _GridSpacingX("Grid Spacing X", Float) = 10.0
         _GridSpacingY("Grid Spacing Y", Float) = 10.0
         _GridColor("Grid Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_RoadColor("Road Color", Color) = (0.33, 0.52, 0.55, 0.55)
     }
 
     SubShader{
@@ -27,6 +28,11 @@
             uniform float _GridSpacingX;
             uniform float _GridSpacingY;
             uniform float4 _GridColor;
+
+			uniform float4 _RoadColor;
+			uniform float2 _RoadPoints[1000];
+			uniform int _NumberOfColumns;
+			uniform float2 _LeftCoordinates;
 
             struct vertexInput {
                 float4 vertex : POSITION;
@@ -54,6 +60,11 @@
                     frac(input.worldPos.y / _GridSpacingY) < _GridThickness) {
                     return _GridColor;
                 }
+				int row = abs(_LeftCoordinates.y - input.worldPos.y) / _GridSpacingY; 
+				int column = abs(input.worldPos.x - _LeftCoordinates.x) / _GridSpacingX;
+				if (_RoadPoints[row*_NumberOfColumns + column].x == 1) {
+					return _RoadColor;
+				}
                 return tex2D(_MainTex, input.tex.xy);
             }
 
