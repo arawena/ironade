@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Node
 {
-    public Vector2 centerWorldPos;
+    public Vector3 centerWorldPos;
     public TileType type;
     public int gridRow;
     public int gridColumn;
@@ -14,7 +14,8 @@ public class Node
 
     public Node(Vector2 nodeCenterWorldPos, TileType nodeType, int nodeRow, int nodeColumn)
     {
-        centerWorldPos = nodeCenterWorldPos;
+        float zPosition = (nodeCenterWorldPos.y - GridOperations.sharedInstance.coordinates[Coordinate.Top]) / GridOperations.sharedInstance.mapHeight;
+        centerWorldPos = new Vector3(nodeCenterWorldPos.x, nodeCenterWorldPos.y, zPosition);
         type = nodeType;
         gridRow = nodeRow;
         gridColumn = nodeColumn;
@@ -23,5 +24,22 @@ public class Node
     public int GetFCost()
     {
         return gCost + hCost;
+    }
+
+    public Vector3 getOuterMostCoordinate()
+    {
+        if(gridRow == 0)
+        {
+            return centerWorldPos + new Vector3(0, GridOperations.sharedInstance.cellHeight / 2, (GridOperations.sharedInstance.cellHeight / (2 * GridOperations.sharedInstance.mapHeight)));
+        } else if(gridColumn == 0)
+        {
+            return centerWorldPos - new Vector3(GridOperations.sharedInstance.cellWidth / 2, 0, 0);
+        } else if(gridRow >= gridColumn)
+        {
+            return centerWorldPos - new Vector3(0, GridOperations.sharedInstance.cellHeight / 2, (GridOperations.sharedInstance.cellHeight/ (2*GridOperations.sharedInstance.mapHeight)));
+        } else
+        {
+            return centerWorldPos + new Vector3(GridOperations.sharedInstance.cellWidth / 2, 0, 0);
+        }
     }
 }

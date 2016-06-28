@@ -83,4 +83,14 @@ public class MapGraph : MonoBehaviour
         int y = Mathf.RoundToInt((graph.GetLength(1) - 1) * percentY);
         return graph[x, y];
     }
+
+    public List<Node> getSpawnNodes()
+    {
+        List<Node> spawnNodes = new List<Node>();
+        foreach(Vector2 coordinate in GridOperations.sharedInstance.GetSpawnLocations())
+        {
+            spawnNodes.Add(graph[(int)coordinate.x, (int)coordinate.y]);
+        }
+        return spawnNodes;
+    }
 }

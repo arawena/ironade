@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PathFinding : MonoBehaviour {
+public class PathFinding : MonoBehaviour
+{
 
     MapGraph grid;
 
@@ -11,17 +12,33 @@ public class PathFinding : MonoBehaviour {
 
     public Dictionary<Node, List<Node>> pathsForSpawnLocations;
 
+    private static PathFinding _sharedInstance;
+    public static PathFinding sharedInstance
+    {
+        get
+        {
+            if (!_sharedInstance)
+            {
+                _sharedInstance = GameObject.FindObjectOfType<PathFinding>();
+            }
+            return _sharedInstance;
+        }
+    }
+
     void Start()
     {
         grid = MapGraph.sharedInstance;
-        pathsForSpawnLocations = new Dictionary<Node, List<Node>>();
-        CalculatePathsForSpawnLocation(new Vector2(0,0));
+        CalculatePathsForSpawnLocation();
     }
 
-    void CalculatePathsForSpawnLocation(Vector2 sLocation)
+    public void CalculatePathsForSpawnLocation()
     {
-        Node startNode = grid.graph[(int)sLocation.x, (int)sLocation.y];
-        FindPath(startNode, grid.goal);
+        pathsForSpawnLocations = new Dictionary<Node, List<Node>>();
+        foreach (Vector2 sLocation in GridOperations.sharedInstance.GetSpawnLocations())
+        {
+            Node startNode = grid.graph[(int)sLocation.x, (int)sLocation.y];
+            FindPath(startNode, grid.goal);
+        }
     }
 
     void FindPath(Node startNode, Node targetNode)
