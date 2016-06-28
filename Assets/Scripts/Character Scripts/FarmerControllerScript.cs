@@ -13,9 +13,9 @@ public class FarmerControllerScript : MonoBehaviour {
     private List<Node> path;
 
     private int pathIndex;
-
-    private const float fracJourney = 0.01F;
     private Vector3 travelDistance;
+
+    private bool forward;
 
 	void Start () {
 		motionAnimator = GetComponent<Animator> ();
@@ -24,6 +24,7 @@ public class FarmerControllerScript : MonoBehaviour {
         float smallerDimension = (GridOperations.sharedInstance.cellHeight > GridOperations.sharedInstance.cellWidth) ? GridOperations.sharedInstance.cellWidth: GridOperations.sharedInstance.cellHeight;
 
         pathIndex = 0;
+        forward = true;
 
         path = PathFinding.sharedInstance.pathsForSpawnLocations[nextNode];
 
@@ -38,11 +39,21 @@ public class FarmerControllerScript : MonoBehaviour {
 
 	void Update () {
         transform.position += travelDistance;
-        if (Vector3.Distance(transform.position, nextNode.centerWorldPos) < travelDistance.magnitude && pathIndex != path.Count-1)
+        if (Vector3.Distance(transform.position, nextNode.centerWorldPos) < travelDistance.magnitude)
         {
             transform.position = nextNode.centerWorldPos;
             nextNode = path[pathIndex];
-            pathIndex++;
+            if (forward && pathIndex<path.Count-1)
+            {
+                pathIndex++;
+            } else if(!forward)
+            {
+                pathIndex--;
+            } else
+            {
+                forward = false;
+                pathIndex--;
+            }
             InitMotion();
         }
 	}
@@ -78,6 +89,5 @@ public class FarmerControllerScript : MonoBehaviour {
             Flip();
             isFlipped = (currentDirection == Direction.Right);
         }
-        
     }
 }
