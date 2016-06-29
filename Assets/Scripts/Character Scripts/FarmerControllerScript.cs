@@ -96,4 +96,13 @@ public class FarmerControllerScript : MonoBehaviour {
             isFlipped = (currentDirection == Direction.Right);
         }
     }
+
+    public void GetHit (float health)
+    {
+        GetComponent<FarmerPropertiesScript>().health -= health;
+        if (GetComponent<FarmerPropertiesScript>().health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
