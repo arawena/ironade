@@ -67,8 +67,7 @@ public class SpawnWave : State
                 UpdateCurrentSpawn();
             } else
             {
-                nextState = gameObject.GetComponent<SetupScene>();
-                return;
+                doneSpawning = true;
             }
             
         } else if(doneSpawning)
@@ -85,6 +84,13 @@ public class SpawnWave : State
             {
                 doneSpawning = false;
                 activeEnemies = new List<GameObject>();
+
+                if(sIterator.roundSpawnIndex == spawnWave[sIterator.roundIndex].Count-1 &&
+                    sIterator.roundIndex == spawnWave.Count-1) 
+                {
+                                    gameObject.GetComponent<LevelScreenScript>().level += 1;
+                nextState = gameObject.GetComponent<LevelScreenScript>();
+                }
             }
                 
             timeInRound = 0;

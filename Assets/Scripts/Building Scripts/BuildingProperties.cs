@@ -16,4 +16,6 @@ public class BuildingProperties:MonoBehaviour {
     public float firingSpeed;
     public float damagePerHit;
 
+    public int price;
+
 }

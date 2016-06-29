@@ -51,6 +51,22 @@ public class FarmerControllerScript : MonoBehaviour
     void Update()
     {
         transform.position += travelDistance * Time.deltaTime;
+
+        if(
+            transform.position.y > GridOperations.sharedInstance.coordinates[Coordinate.Top] ||
+            transform.position.x < GridOperations.sharedInstance.coordinates[Coordinate.Left] ||
+            transform.position.x > GridOperations.sharedInstance.coordinates[Coordinate.Right] ||
+            transform.position.y < GridOperations.sharedInstance.coordinates[Coordinate.Bottom])
+        {
+            GameObject gameController = GameObject.Find("GameController");
+            gameController.GetComponent<GameControllerScript>().currentState.enabled = false;
+            LevelScreenScript levelScreen = gameController.GetComponent<LevelScreenScript>();
+            levelScreen.level = -1;
+            levelScreen.enabled = true;
+            gameController.GetComponent<GameControllerScript>().currentState = levelScreen;
+            DestroyObject(gameObject);
+        }
+
         if (MapGraph.sharedInstance.NodeFromWorldPoint(transform.position) == MapGraph.sharedInstance.goal && !treasure.GetComponent<TreasureScript>().isTaken)
         {
             treasure.GetComponent<TreasureScript>().StateChange(true, Vector3.zero);
