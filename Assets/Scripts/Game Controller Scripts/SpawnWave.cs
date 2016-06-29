@@ -45,32 +45,35 @@ public class SpawnWave : State
     void Update()
     {
         timeInRound += Time.deltaTime;
-        if(!doneSpawning && timeInRound > currentSpawn.spawnTime)
+        if (!doneSpawning && timeInRound > currentSpawn.spawnTime)
         {
             int rand = randomNumberGenerator.Next(0, numberOfSpawnLocations);
             Node spawnLocation = MapGraph.sharedInstance.getSpawnNodes()[rand];
-            GameObject newFarmer = (GameObject)Instantiate(prefabs[(int)currentSpawn.enemyType-1], spawnLocation.getOuterMostCoordinate(), Quaternion.identity);
+            GameObject newFarmer = (GameObject)Instantiate(prefabs[(int)currentSpawn.enemyType - 1], spawnLocation.getOuterMostCoordinate(), Quaternion.identity);
             FarmerControllerScript farmerScript = newFarmer.GetComponent<FarmerControllerScript>();
             farmerScript.nextNode = spawnLocation;
             activeEnemies.Add(newFarmer);
 
-            if(sIterator.roundSpawnIndex < spawnWave[sIterator.roundIndex].Count-1)
+            if (sIterator.roundSpawnIndex < spawnWave[sIterator.roundIndex].Count - 1)
             {
                 sIterator.roundSpawnIndex++;
                 UpdateCurrentSpawn();
-            } else if(sIterator.roundIndex < spawnWave.Count-1)
+            }
+            else if (sIterator.roundIndex < spawnWave.Count - 1)
             {
                 sIterator.roundIndex++;
                 sIterator.roundSpawnIndex = 0;
                 doneSpawning = true;
                 timeInRound = 0;
                 UpdateCurrentSpawn();
-            } else
+            }
+            else
             {
                 doneSpawning = true;
             }
-            
-        } else if(doneSpawning)
+
+        }
+        else if (doneSpawning)
         {
             int aliveCount = 0;
             for (var i = 0; i < activeEnemies.Count; i++)
@@ -85,14 +88,14 @@ public class SpawnWave : State
                 doneSpawning = false;
                 activeEnemies = new List<GameObject>();
 
-                if(sIterator.roundSpawnIndex == spawnWave[sIterator.roundIndex].Count-1 &&
-                    sIterator.roundIndex == spawnWave.Count-1) 
+                if (sIterator.roundSpawnIndex == spawnWave[sIterator.roundIndex].Count - 1 &&
+                    sIterator.roundIndex == spawnWave.Count - 1)
                 {
-                                    gameObject.GetComponent<LevelScreenScript>().level += 1;
-                nextState = gameObject.GetComponent<LevelScreenScript>();
+                    gameObject.GetComponent<LevelScreenScript>().level += 1;
+                    nextState = gameObject.GetComponent<LevelScreenScript>();
                 }
             }
-                
+
             timeInRound = 0;
         }
     }
