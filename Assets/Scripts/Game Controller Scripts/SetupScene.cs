@@ -3,6 +3,11 @@ using System.Collections;
 
 public class SetupScene : State
 {
+    public int availableBudget;
+
+    void Start()
+    {
+    }
 
     void Update()
     {
@@ -12,7 +17,6 @@ public class SetupScene : State
         } else if(Input.GetKeyDown(KeyCode.Alpha2))
         {
             SpawnWave spawnState = gameObject.GetComponent<SpawnWave>();
-            spawnState.numberOfEnemies = 1;
             nextState = spawnState;
         }
     }

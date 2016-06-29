@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 public class FileOperations {
 	public static int[,] ReadFile(String nameOfFile) {
@@ -38,6 +39,43 @@ public class FileOperations {
 			}
 
 		}
-	}
+    }
+
+    public static List<LevelDescription> getLevelDescription(String nameOfFile)
+    {
+        int k = 0;
+        TextAsset textFile = (TextAsset)Resources.Load(nameOfFile);
+
+        char[] separators = { '\n', '\r' };
+        var lines = textFile.text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+        List < LevelDescription > resultsArray = new List<LevelDescription>();
+
+        int numberOfLevels = int.Parse(lines[k]);
+        k++;
+
+        for (int i=0; i<numberOfLevels; i++)
+        {
+            LevelDescription level;
+            level.budget = int.Parse(lines[k]);
+            int numberOfRounds = int.Parse(lines[k+1]);
+            level.enemySpawnDetails = new List<List<EnemySpawn>>();
+            k += 2;
+            for(int j=k; j<k+numberOfRounds;j++)
+            {
+                string[] enemyRound = lines[j].Split(' ');
+                List<EnemySpawn> oneRound = new List<EnemySpawn>();
+                for(int q = 0; q<enemyRound.Length; q+=2)
+                {
+                    EnemySpawn spawn = new EnemySpawn { enemyType = (CharacterType)int.Parse(enemyRound[q]) , spawnTime = float.Parse(enemyRound[q+1]) };
+                    oneRound.Add(spawn);
+                }
+                level.enemySpawnDetails.Add(oneRound);
+            }
+            k += numberOfRounds;
+            resultsArray.Add(level);
+        }
+        return resultsArray;
+    }
 
 }
