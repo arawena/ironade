@@ -1,49 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletScript : MonoBehaviour {
+public class BulletScript : MonoBehaviour
+{
 
     public GameObject target;
 
     public float speed;
     public float damage;
 
-    private float threshold;
-    private Vector3 travelDistance;
     private float totalTime = 0;
-
     private const int lifeTime = 3;
 
-	void Start () {
-        threshold = ((target.transform.position - transform.position) * 0.2F).magnitude;
-        travelDistance = (target.transform.position - transform.position) * (GridOperations.sharedInstance.cellWidth * speed);
+    void Start()
+    {
+
     }
-	
-	void Update () {
+
+    void Update()
+    {
         if (target)
         {
-            transform.position += travelDistance * Time.deltaTime;
-            if (Vector3.Distance(transform.position, target.transform.position) < threshold)
-            {
-                FarmerControllerScript properties = target.GetComponent<FarmerControllerScript>();
-                properties.GetHit(damage);
-
-            }
-        } else
+            Vector3 difference = target.transform.position - transform.position;
+            Vector3 direction = difference / difference.magnitude;
+            Vector3 scaledVector = new Vector3(direction.x * GridOperations.sharedInstance.cellWidth, direction.y * GridOperations.sharedInstance.cellHeight, direction.z);
+            transform.position += scaledVector * speed * Time.deltaTime;
+        }
+        else
         {
             DestroyObject(gameObject);
         }
 
         totalTime += Time.deltaTime;
-        if(totalTime>lifeTime)
+        if (totalTime > lifeTime)
         {
             DestroyObject(gameObject);
         }
-	}
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.CompareTag("farmer"))
+        if (other.gameObject == target)
         {
             FarmerControllerScript properties = other.gameObject.GetComponent<FarmerControllerScript>();
             properties.GetHit(damage);
