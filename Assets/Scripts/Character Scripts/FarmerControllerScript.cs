@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-enum Direction{None, Up, Down, Left, Right};
+enum Direction { None, Up, Down, Left, Right };
 
-public class FarmerControllerScript : MonoBehaviour {
+public class FarmerControllerScript : MonoBehaviour
+{
 
-	private Animator motionAnimator;
-	private bool isFlipped = false;
+    private Animator motionAnimator;
+    private bool isFlipped = false;
     public Node nextNode;
 
     private List<Node> path;
@@ -17,16 +18,20 @@ public class FarmerControllerScript : MonoBehaviour {
     private float threshold;
 
     private bool forward;
+    private GameObject treasure;
 
-	void Start () {
-		motionAnimator = GetComponent<Animator> ();
+    void Start()
+    {
+        motionAnimator = GetComponent<Animator>();
         SpriteRenderer mRenderer = GetComponent<SpriteRenderer>();
         BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
         boxCollider.size = mRenderer.sprite.bounds.size;
 
+        treasure = GameObject.FindWithTag("treasure");
+
         InitMotion();
 
-        float smallerDimension = (GridOperations.sharedInstance.cellHeight > GridOperations.sharedInstance.cellWidth) ? GridOperations.sharedInstance.cellWidth: GridOperations.sharedInstance.cellHeight;
+        float smallerDimension = (GridOperations.sharedInstance.cellHeight > GridOperations.sharedInstance.cellWidth) ? GridOperations.sharedInstance.cellWidth : GridOperations.sharedInstance.cellHeight;
 
         pathIndex = 0;
         forward = true;
@@ -43,32 +48,43 @@ public class FarmerControllerScript : MonoBehaviour {
     }
 
 
-	void Update () {
-        transform.position += travelDistance*Time.deltaTime;
+    void Update()
+    {
+        transform.position += travelDistance * Time.deltaTime;
+        if (MapGraph.sharedInstance.NodeFromWorldPoint(transform.position) == MapGraph.sharedInstance.goal && !treasure.GetComponent<TreasureScript>().isTaken)
+        {
+            treasure.GetComponent<TreasureScript>().StateChange(true, Vector3.zero);
+            GetComponent<FarmerPropertiesScript>().hasTreasure = true;
+        }
         if (Vector3.Distance(transform.position, nextNode.centerWorldPos) < threshold)
         {
             transform.position = nextNode.centerWorldPos;
             nextNode = path[pathIndex];
-            if (forward && pathIndex<path.Count-1)
+            if (forward && pathIndex < path.Count - 1)
             {
                 pathIndex++;
-            } else if(!forward)
+            }
+            else if (!forward)
             {
                 pathIndex--;
-            } else
+            }
+            else
             {
                 forward = false;
                 pathIndex--;
             }
+
+
             InitMotion();
         }
-	}
+    }
 
-	void Flip () {
-		Vector3 mScale = transform.localScale;
-		mScale.x *= -1;
-		transform.localScale = mScale;
-	}
+    void Flip()
+    {
+        Vector3 mScale = transform.localScale;
+        mScale.x *= -1;
+        transform.localScale = mScale;
+    }
 
     void CalculateDirection()
     {
@@ -77,13 +93,16 @@ public class FarmerControllerScript : MonoBehaviour {
         if (transform.position.x > nextNode.centerWorldPos.x)
         {
             currentDirection = Direction.Left;
-        } else if (transform.position.x < nextNode.centerWorldPos.x)
+        }
+        else if (transform.position.x < nextNode.centerWorldPos.x)
         {
             currentDirection = Direction.Right;
-        } else if (transform.position.y > nextNode.centerWorldPos.y)
+        }
+        else if (transform.position.y > nextNode.centerWorldPos.y)
         {
             currentDirection = Direction.Up;
-        } else
+        }
+        else
         {
             currentDirection = Direction.Down;
         }
@@ -97,11 +116,15 @@ public class FarmerControllerScript : MonoBehaviour {
         }
     }
 
-    public void GetHit (float health)
+    public void GetHit(float health)
     {
         GetComponent<FarmerPropertiesScript>().health -= health;
         if (GetComponent<FarmerPropertiesScript>().health <= 0)
         {
+            if(GetComponent<FarmerPropertiesScript>().hasTreasure)
+            {
+                treasure.GetComponent<TreasureScript>().StateChange(false, transform.position);
+            }
             Destroy(gameObject);
         }
     }

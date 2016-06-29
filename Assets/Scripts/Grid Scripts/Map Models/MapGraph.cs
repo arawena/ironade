@@ -42,6 +42,7 @@ public class MapGraph : MonoBehaviour
                 if((TileType)GridOperations.sharedInstance.grid[i, j] == TileType.Treasure)
                 {
                     goal = graph[i, j];
+                    GameObject.FindGameObjectWithTag("treasure").transform.position = goal.centerWorldPos;
                 }
             }
         }
@@ -74,14 +75,14 @@ public class MapGraph : MonoBehaviour
 
     public Node NodeFromWorldPoint(Vector2 worldPosition)
     {
-        float percentX = (worldPosition.x + GridOperations.sharedInstance.mapWidth / 2) / GridOperations.sharedInstance.mapWidth;
-        float percentY = (worldPosition.y + GridOperations.sharedInstance.mapHeight / 2) / GridOperations.sharedInstance.mapHeight;
+        float percentX = Mathf.Abs(worldPosition.x - GridOperations.sharedInstance.coordinates[Coordinate.Left]) / GridOperations.sharedInstance.mapWidth;
+        float percentY = Mathf.Abs(worldPosition.y - GridOperations.sharedInstance.coordinates[Coordinate.Top]) / GridOperations.sharedInstance.mapHeight;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
         int x = Mathf.RoundToInt((graph.GetLength(0) - 1) * percentX);
         int y = Mathf.RoundToInt((graph.GetLength(1) - 1) * percentY);
-        return graph[x, y];
+        return graph[y,x];
     }
 
     public List<Node> getSpawnNodes()
