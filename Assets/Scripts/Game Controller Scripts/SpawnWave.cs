@@ -49,7 +49,6 @@ public class SpawnWave : State
         {
             int rand = randomNumberGenerator.Next(0, numberOfSpawnLocations);
             Node spawnLocation = MapGraph.sharedInstance.getSpawnNodes()[rand];
-            GameObject relevantGO;
             GameObject newFarmer = (GameObject)Instantiate(prefabs[(int)currentSpawn.enemyType-1], spawnLocation.getOuterMostCoordinate(), Quaternion.identity);
             FarmerControllerScript farmerScript = newFarmer.GetComponent<FarmerControllerScript>();
             farmerScript.nextNode = spawnLocation;
@@ -62,6 +61,7 @@ public class SpawnWave : State
             } else if(sIterator.roundIndex < spawnWave.Count-1)
             {
                 sIterator.roundIndex++;
+                sIterator.roundSpawnIndex = 0;
                 doneSpawning = true;
                 timeInRound = 0;
                 UpdateCurrentSpawn();
@@ -81,7 +81,12 @@ public class SpawnWave : State
                     aliveCount++;
                 }
             }
-            doneSpawning = aliveCount != 0 ? true : false;
+            if (aliveCount == 0)
+            {
+                doneSpawning = false;
+                activeEnemies = new List<GameObject>();
+            }
+                
             timeInRound = 0;
         }
     }
