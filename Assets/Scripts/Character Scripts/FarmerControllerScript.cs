@@ -14,11 +14,16 @@ public class FarmerControllerScript : MonoBehaviour {
 
     private int pathIndex;
     private Vector3 travelDistance;
+    private float threshold;
 
     private bool forward;
 
 	void Start () {
 		motionAnimator = GetComponent<Animator> ();
+        SpriteRenderer mRenderer = GetComponent<SpriteRenderer>();
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+        boxCollider.size = mRenderer.sprite.bounds.size;
+
         InitMotion();
 
         float smallerDimension = (GridOperations.sharedInstance.cellHeight > GridOperations.sharedInstance.cellWidth) ? GridOperations.sharedInstance.cellWidth: GridOperations.sharedInstance.cellHeight;
@@ -32,14 +37,15 @@ public class FarmerControllerScript : MonoBehaviour {
 
     void InitMotion()
     {
-        travelDistance = (nextNode.centerWorldPos - transform.position) * 0.01f;
+        threshold = ((nextNode.centerWorldPos - transform.position) * 0.01F).magnitude;
+        travelDistance = (nextNode.centerWorldPos - transform.position) * (GridOperations.sharedInstance.cellWidth * GetComponent<FarmerPropertiesScript>().speed);
         CalculateDirection();
     }
 
 
 	void Update () {
-        transform.position += travelDistance;
-        if (Vector3.Distance(transform.position, nextNode.centerWorldPos) < travelDistance.magnitude)
+        transform.position += travelDistance*Time.deltaTime;
+        if (Vector3.Distance(transform.position, nextNode.centerWorldPos) < threshold)
         {
             transform.position = nextNode.centerWorldPos;
             nextNode = path[pathIndex];

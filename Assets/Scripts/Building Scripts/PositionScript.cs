@@ -36,7 +36,7 @@ public class PositionScript : State
         canPlace = GridOperations.sharedInstance.CheckFreeSpace(properties.topLeftCellX, properties.topLeftCellY, properties.baseCellsWidth, properties.baseCellsHeight);
         if (canPlace)
         {
-            mRenderer.color = new Color(198.0f / 255.0f, 238.0f / 255.0f, 196.0f / 255.0f);
+            mRenderer.color = new Color(107.0f / 255.0f, 212.0f / 255.0f, 155.0f / 255.0f);
         }
         else
         {

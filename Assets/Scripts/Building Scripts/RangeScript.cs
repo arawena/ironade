@@ -4,6 +4,12 @@ using System.Collections;
 public class RangeScript : MonoBehaviour {
     SpriteRenderer mRenderer;
 
+    void Start()
+    {
+        CircleCollider2D collider = GetComponent<CircleCollider2D>();
+        collider.radius = GetComponentInParent<BuildingProperties>().rangeRadius * GridOperations.sharedInstance.cellHeight;
+    }
+
     public void RescaleSprite()
     {
         mRenderer = GetComponent<SpriteRenderer>();

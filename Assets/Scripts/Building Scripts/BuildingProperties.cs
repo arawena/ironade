@@ -14,4 +14,6 @@ public class BuildingProperties:MonoBehaviour {
 
     public float rangeRadius;
     public float firingSpeed;
+    public float damagePerHit;
+
 }

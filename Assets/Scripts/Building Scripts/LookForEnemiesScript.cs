@@ -3,12 +3,11 @@ using System.Collections;
 
 public class LookForEnemiesScript : State {
 
-	// Use this for initialization
+    private Node currentNode;
 	void Start () {
-	
+        currentNode = MapGraph.sharedInstance.NodeFromWorldPoint(transform.position);
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
