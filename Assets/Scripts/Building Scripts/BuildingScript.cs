@@ -7,10 +7,12 @@ public class BuildingScript : StateMachine
 	private SpriteRenderer mRenderer;
 
     void Start () {
-		mRenderer = gameObject.GetComponent<SpriteRenderer> ();
-		rescaleSprite ();
-    
         currentState = gameObject.GetComponent<PositionScript>();
+        mRenderer = gameObject.GetComponent<SpriteRenderer> ();
+		rescaleSprite ();
+
+        GetComponentInChildren<RangeScript>().RescaleSprite();
+
         currentState.enabled = true;
     }
 

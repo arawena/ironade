@@ -11,7 +11,9 @@ public class CreateBuildingScript : State {
     }
 	
 	void Update () {
-	    if(createdBuilding.GetComponent<BuildingScript>().currentState != createdBuilding.GetComponent<PositionScript>())
+        State a = createdBuilding.GetComponent<BuildingScript>().currentState;
+
+        if (createdBuilding.GetComponent<BuildingScript>().currentState && createdBuilding.GetComponent<BuildingScript>().currentState != createdBuilding.GetComponent<PositionScript>())
         {
             nextState = gameObject.GetComponent<SetupScene>();
         }

@@ -11,4 +11,7 @@ public class BuildingProperties:MonoBehaviour {
 
     public int topLeftCellX;
     public int topLeftCellY;
+
+    public float rangeRadius;
+    public float firingSpeed;
 }

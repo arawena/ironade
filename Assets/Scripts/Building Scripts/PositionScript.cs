@@ -6,7 +6,7 @@ public class PositionScript : State
     public float movementSpeed;
     private BuildingProperties properties;
     private SpriteRenderer mRenderer;
-    private bool canPlace;
+    private bool canPlace = false;
 
     // Use this for initialization
     void Start()
@@ -22,6 +22,7 @@ public class PositionScript : State
         {
             GridOperations.sharedInstance.WriteBuildingToGrid(properties.topLeftCellX, properties.topLeftCellY, properties.baseCellsWidth, properties.baseCellsHeight);
             mRenderer.color = Color.white;
+            GetComponentsInChildren<SpriteRenderer>()[1].enabled = false;
             nextState = gameObject.GetComponent<LookForEnemiesScript>();
         }
         else
