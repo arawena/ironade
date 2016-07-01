@@ -141,6 +141,7 @@ public class FarmerControllerScript : MonoBehaviour
             {
                 treasure.GetComponent<TreasureScript>().StateChange(false, transform.position);
             }
+           MapGraph.sharedInstance.NodeFromWorldPoint(transform.position).deathToll++;
             Destroy(gameObject);
         }
     }

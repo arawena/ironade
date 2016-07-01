@@ -29,7 +29,11 @@ public class SetupScene : State
 
     void OnEnable()
     {
-        budgetText.text = budgetString + availableBudget;
+        if(budgetText)
+        {
+            budgetText.text = budgetString + availableBudget;
+        }
+
     }
 
     void Update()

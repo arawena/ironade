@@ -10,6 +10,8 @@ public class Node
     public int gCost;
     public int hCost;
 
+    public int deathToll = 0;
+
     public Node parent;
 
     public Node(Vector2 nodeCenterWorldPos, TileType nodeType, int nodeRow, int nodeColumn)
@@ -23,7 +25,7 @@ public class Node
 
     public int GetFCost()
     {
-        return gCost + hCost;
+        return gCost + hCost + (deathToll>0?(10-10/deathToll):0);
     }
 
     public Vector3 getOuterMostCoordinate()
